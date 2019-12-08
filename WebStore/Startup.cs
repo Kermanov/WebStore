@@ -10,6 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Context;
+using WebStore.Models;
+using WebStore.Repositories;
+using WebStore.Services;
+using WebStore.UnitOfWork;
 
 namespace WebStore
 {
@@ -31,6 +35,10 @@ namespace WebStore
             services.AddDbContext<WebStoreContext>(options =>
                 options.UseSqlServer(connection));
             services.AddMvc();
+
+            services.AddScoped<WebStoreUnitOfWork>();
+
+            services.AddTransient<ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +65,7 @@ namespace WebStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Catalog}/{action=Index}/{id?}");
             });
         }
     }
