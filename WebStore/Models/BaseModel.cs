@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebStore.Models
 {
-    public class Category: BaseModel
+    public class BaseModel
     {
-        public string Name { get; set; }
+        public int Id { get; set; }
     }
 }
