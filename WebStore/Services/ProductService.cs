@@ -32,5 +32,10 @@ namespace WebStore.Services
             unitOfWork.Products.Create(product);
             unitOfWork.Save();
         }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return unitOfWork.Categories.GetAll();
+        }
     }
 }
