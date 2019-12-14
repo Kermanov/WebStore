@@ -34,27 +34,19 @@ namespace WebStore.Controllers
         // GET: Product/Create
         public ActionResult Create()
         {
+            ViewBag.Categories = productService.GetCategories();
             return View();
         }
 
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string name, string description, decimal price, bool displayComments, int categoryId)
+        public ActionResult Create(Product product)
         {
             try
             {
-                var newProduct = new Product
-                {
-                    Name = name,
-                    Description = description,
-                    Price = price,
-                    DisplayComments = displayComments,
-                    CategoryId = categoryId
-                };
-                productService.Create(newProduct);
-
-                return RedirectToAction(nameof(Create));
+                productService.Create(product);
+                return RedirectToAction("Details", new { product.Id });
             }
             catch
             {
