@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebStore.DTO;
 using WebStore.Models;
 using WebStore.Services;
 
@@ -41,10 +42,18 @@ namespace WebStore.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductDTO productDto)
         {
             try
             {
+                var product = new Product
+                {
+                    Name = productDto.Name,
+                    Description = productDto.Description,
+                    Price = productDto.Price,
+                    DisplayComments = productDto.DisplayComments,
+                    CategoryId = productDto.CategoryId
+                };
                 productService.Create(product);
                 return RedirectToAction("Details", new { product.Id });
             }
