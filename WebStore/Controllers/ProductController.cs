@@ -13,10 +13,12 @@ namespace WebStore.Controllers
     public class ProductController : Controller
     {
         private readonly ProductService productService;
+        private readonly ImageService imageService;
 
-        public ProductController(ProductService productService)
+        public ProductController(ProductService productService, ImageService imageService)
         {
             this.productService = productService;
+            this.imageService = imageService;
         }
 
         // GET: Product
@@ -46,13 +48,15 @@ namespace WebStore.Controllers
         {
             try
             {
+                var imageSource = imageService.SaveImage(productDto.Image);
                 var product = new Product
                 {
                     Name = productDto.Name,
                     Description = productDto.Description,
                     Price = productDto.Price,
                     DisplayComments = productDto.DisplayComments,
-                    CategoryId = productDto.CategoryId
+                    CategoryId = productDto.CategoryId,
+                    ImageSource = imageSource
                 };
                 productService.Create(product);
                 return RedirectToAction("Details", new { product.Id });
@@ -89,7 +93,8 @@ namespace WebStore.Controllers
         // GET: Product/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            productService.Delete(id);
+            return Ok();
         }
 
         // POST: Product/Delete/5
