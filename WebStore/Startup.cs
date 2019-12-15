@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Configs;
 using WebStore.Context;
 using WebStore.Models;
 using WebStore.Repositories;
@@ -36,9 +37,13 @@ namespace WebStore
                 options.UseSqlServer(connection));
             services.AddMvc();
 
+            services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
+
             services.AddScoped<WebStoreUnitOfWork>();
 
             services.AddTransient<ProductService>();
+
+            services.AddTransient<ImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
