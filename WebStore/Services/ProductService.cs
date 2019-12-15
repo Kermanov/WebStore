@@ -37,5 +37,11 @@ namespace WebStore.Services
         {
             return unitOfWork.Categories.GetAll();
         }
+
+        public void Delete(int id)
+        {
+            unitOfWork.Products.DeleteById(id);
+            unitOfWork.Save();
+        }
     }
 }
