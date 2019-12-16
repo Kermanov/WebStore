@@ -51,6 +51,21 @@ namespace WebStore
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            IConfigurationSection googleAuthNSection =
+                Configuration.GetSection("Authentication:Google");
+
+            options.ClientId = "929664678647-i7s7kec0gd78rcf5i122c0d3fcamh2v6.apps.googleusercontent.com";
+            options.ClientSecret = "_aQRul3etWzxVAXmCCeFwyWb";
+        })
+        .AddFacebook(facebookOptions => 
+        {
+            facebookOptions.AppId = "472360833696325";
+            facebookOptions.AppSecret = "ef70638556d3d4b3149e4147a9b3b7ad";
+        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
