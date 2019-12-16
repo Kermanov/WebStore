@@ -9,6 +9,11 @@ namespace WebStore.Controllers
 {
     public class OAuthController : Controller
     {
+
+        public ActionResult SignFacebook()
+        {
+            return View();
+        }
         // GET: OAuth
         public ActionResult Index()
         {
