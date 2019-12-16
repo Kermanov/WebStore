@@ -53,5 +53,16 @@
             }
         </div>
     </div>
+
+    <div>
+    <ul class="pagination">
+        @for (var i = 1; i <= ViewBag.PagesCount; ++i)
+        {
+            <li class="page-item @(i == ViewBag.PageNumber ? "active" : "")">
+                <a href="@Url.Action("Index", "Catalog", new { filterParams = ViewBag.FilterParams, pageNumber = i })" class="page-link">@i</a>
+            </li>
+        }
+    </ul>
+</div>
 </div>
 

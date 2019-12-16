@@ -19,7 +19,7 @@ namespace WebStore.Controllers
             this.productService = productService;
         }
 
-        public IActionResult Index(FilterParams filterParams)
+        public IActionResult Index(FilterParams filterParams, int? pageNumber)
         {
             ViewBag.Categories = productService.GetCategories();
 
@@ -33,6 +33,11 @@ namespace WebStore.Controllers
             {
                 products = productService.GetAll();
             }
+
+            ViewBag.PageNumber = pageNumber ?? 1;
+            int pagesCount;
+            products = productService.GetPaginated(products, pageNumber ?? 1, 1, out pagesCount);
+            ViewBag.PagesCount = pagesCount;
 
             return View(products);
         }

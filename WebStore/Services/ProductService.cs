@@ -82,5 +82,20 @@ namespace WebStore.Services
 
             return products;
         }
+
+        public IEnumerable<Product> GetPaginated(IEnumerable<Product> products, int pageNumber, int pageSize, out int pagesCount)
+        {
+            pagesCount = products.Count() / pageSize + 1;
+
+            var productPage = new List<Product>();
+
+            int firstIndex = pageSize * (pageNumber - 1);
+            for (int i = firstIndex; i < firstIndex + pageSize && i < products.Count(); ++i)
+            {
+                productPage.Add(products.ElementAt(i));
+            }
+
+            return productPage;
+        }
     }
 }
