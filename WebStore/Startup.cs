@@ -12,6 +12,10 @@ using WebStore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.UnitOfWork;
+using WebStore.Configs;
+using WebStore.Context;
+using WebStore.Services;
 
 namespace WebStore
 {
@@ -27,6 +31,19 @@ namespace WebStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<WebStoreContext>(options =>
+                options.UseSqlServer(connection));
+
+            services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
+
+            services.AddScoped<WebStoreUnitOfWork>();
+
+            services.AddTransient<ProductService>();
+
+            services.AddTransient<ImageService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
