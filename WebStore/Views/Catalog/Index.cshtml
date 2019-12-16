@@ -37,17 +37,15 @@
         </form>
     </div>
     <div class="container">
-        <div class="card-columns">
+        <div class="row">
             @foreach (var product in Model)
             {
-                <div class="card">
+                <div class="card col-3 m-2 p-0">
                     <img src="@product.ImageSource" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <hr />
                         <a href="@Url.Action("Details", "Product", new { id = product.Id })"><h5 class="card-title">@product.Name</h5></a>
                         <h5 class="float-left">$@Math.Round(product.Price, 2)</h5>
                         <a href="#"><h5 class="float-right">Add to cart</h5></a>
-                        <br />
                     </div>
                 </div>
             }
