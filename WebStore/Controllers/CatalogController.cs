@@ -36,7 +36,7 @@ namespace WebStore.Controllers
 
             ViewBag.PageNumber = pageNumber ?? 1;
             int pagesCount;
-            products = productService.GetPaginated(products, pageNumber ?? 1, 1, out pagesCount);
+            products = productService.GetPaginated(products, pageNumber ?? 1, 10, out pagesCount);
             ViewBag.PagesCount = pagesCount;
 
             return View(products);
