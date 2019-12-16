@@ -55,9 +55,6 @@ namespace WebStore
             services.AddAuthentication()
         .AddGoogle(options =>
         {
-            IConfigurationSection googleAuthNSection =
-                Configuration.GetSection("Authentication:Google");
-
             options.ClientId = "929664678647-i7s7kec0gd78rcf5i122c0d3fcamh2v6.apps.googleusercontent.com";
             options.ClientSecret = "_aQRul3etWzxVAXmCCeFwyWb";
         })
