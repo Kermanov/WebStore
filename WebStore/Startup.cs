@@ -34,8 +34,6 @@ namespace WebStore
             services.AddControllersWithViews();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<WebStoreContext>(options =>
-                options.UseSqlServer(connection));
 
             services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
 
@@ -44,11 +42,11 @@ namespace WebStore
             services.AddTransient<ProductService>();
 
             services.AddTransient<ImageService>();
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<WebStoreContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<WebStoreContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
