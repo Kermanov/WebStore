@@ -21,11 +21,31 @@ namespace WebStore
 {
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            IdentityResult roleResult;
+            //Adding Admin Role
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                //create the roles and seed them to the database
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            //Assign Admin role to the main User here we have given our newly registered 
+            //login id for Admin management
+            IdentityUser user = await UserManager.FindByEmailAsync("nazarsamar32@gmail.com");
+            var User = new IdentityUser();
+            await UserManager.AddToRoleAsync(user, "Admin");
+        }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -34,6 +54,8 @@ namespace WebStore
             services.AddControllersWithViews();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<WebStoreContext>(options =>
+                options.UseSqlServer(connection));
 
             services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
 
@@ -42,17 +64,30 @@ namespace WebStore
             services.AddTransient<ProductService>();
 
             services.AddTransient<ImageService>();
-            services.AddDbContext<WebStoreContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<WebStoreContext>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            options.ClientId = "929664678647-i7s7kec0gd78rcf5i122c0d3fcamh2v6.apps.googleusercontent.com";
+            options.ClientSecret = "_aQRul3etWzxVAXmCCeFwyWb";
+        })
+        .AddFacebook(facebookOptions => 
+        {
+            facebookOptions.AppId = "472360833696325";
+            facebookOptions.AppSecret = "ef70638556d3d4b3149e4147a9b3b7ad";
+        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider service)
         {
             if (env.IsDevelopment())
             {
@@ -80,6 +115,8 @@ namespace WebStore
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateUserRoles(service).Wait();
         }
     }
 }
