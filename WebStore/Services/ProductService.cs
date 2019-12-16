@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.DTO;
 using WebStore.Models;
 using WebStore.Repositories;
 using WebStore.UnitOfWork;
@@ -42,6 +43,44 @@ namespace WebStore.Services
         {
             unitOfWork.Products.DeleteById(id);
             unitOfWork.Save();
+        }
+
+        public IEnumerable<Product> GetFiltered(FilterParams filterParams)
+        {
+            var products = unitOfWork.Products.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(filterParams.NameFilter))
+            {
+                products = products.Where(product => 
+                    product.Name.Contains(filterParams.NameFilter, StringComparison.OrdinalIgnoreCase)
+                );
+            }
+
+            if (filterParams.CategoryFilter > 0)
+            {
+                products = products.Where(product => product.CategoryId == filterParams.CategoryFilter);
+            }
+
+            if (filterParams.MinPrice > 0)
+            {
+                products = products.Where(product => product.Price >= filterParams.MinPrice);
+            }
+
+            if (filterParams.MaxPrice > 0)
+            {
+                products = products.Where(product => product.Price <= filterParams.MaxPrice);
+            }
+
+            if (filterParams.SortParameter == SortParameter.ExpensiveFirst)
+            {
+                products = products.OrderByDescending(product => product.Price);
+            }
+            else if (filterParams.SortParameter == SortParameter.CheapFirst)
+            {
+                products = products.OrderByDescending(product => product.Price).Reverse();
+            }
+
+            return products;
         }
     }
 }

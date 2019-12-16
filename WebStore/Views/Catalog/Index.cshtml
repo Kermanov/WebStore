@@ -3,23 +3,55 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Catalog</h1>
-
 <div class="container-fluid">
-    <div class="card-columns">
-        @foreach (var product in Model)
-        {
-            <div class="card">
-                <img src="@product.ImageSource" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <hr />
-                    <a href="@Url.Action("Details", "Product", new { id = product.Id })"><h5 class="card-title">@product.Name</h5></a>
-                    <h5 class="float-left">$@Math.Round(product.Price, 2)</h5>
-                    <a href="#"><h5 class="float-right">Add to cart</h5></a>
-                    <br />
+    <div class="container-fluid mb-4">
+        <h4>Filtering</h4>
+        <form class="form-row" asp-action="Index" method="post">
+            <div class="col-auto">
+                <input type="text" class="form-control" name="nameFilter" placeholder="Name" value="@ViewBag?.FilterParams.NameFilter">
+            </div>
+            <div class="col-auto">
+                <select name="CategoryFilter" class="form-control">
+                    <option value="0">Category</option>
+                    @foreach (Category category in ViewBag.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="minPrice" placeholder="Min price">
+                    <input type="text" class="form-control" name="maxPrice" placeholder="Max price">
                 </div>
             </div>
-        }
+            <div class="col-auto">
+                <select name="sortParameter" class="form-control">
+                    <option value="0">Cheap first</option>
+                    <option value="1">Expensive first</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <div class="card-columns">
+            @foreach (var product in Model)
+            {
+                <div class="card">
+                    <img src="@product.ImageSource" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <hr />
+                        <a href="@Url.Action("Details", "Product", new { id = product.Id })"><h5 class="card-title">@product.Name</h5></a>
+                        <h5 class="float-left">$@Math.Round(product.Price, 2)</h5>
+                        <a href="#"><h5 class="float-right">Add to cart</h5></a>
+                        <br />
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
