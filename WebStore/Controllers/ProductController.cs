@@ -183,6 +183,7 @@ namespace WebStore.Controllers
             {
                 rrr.Add(result.FirstOrDefault(x => x.Product.Id == item));
             }
+            ViewBag.TotalSum = rrr.Sum(x => x.ProductPrice);
             return View(rrr.OrderBy(x=>x.ProductPrice));
         }
         [Authorize]

@@ -46,12 +46,20 @@
                     @item.ProductPrice
                 </td>
                 <td>
-                    @Html.ActionLink("Add one", "AddOne", new { id=item.CartId }) |
-                    @Html.ActionLink("Remove one", "RemoveOne", new { id=item.CartId }) |
-                    @Html.ActionLink("Delete", "DeleteCart", new { id=item.Product.Id })
+                    @Html.ActionLink("Add one", "AddOne", new { id = item.CartId }) |
+                    @Html.ActionLink("Remove one", "RemoveOne", new { id = item.CartId }) |
+                    @Html.ActionLink("Delete", "DeleteCart", new { id = item.Product.Id })
                 </td>
             </tr>
+
         }
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Total sum: @ViewBag.TotalSum</td>
+            <td></td>
+        </tr>
     </tbody>
 </table>
     }
