@@ -5,6 +5,19 @@
     <UserSecretsId>aspnet-WebStore-9D73D634-547B-4F97-932E-E136E8F81FB1</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Content Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Migrations\20191217171511_NewDatabase.cs" />
+    <Compile Include="Migrations\20191217171511_NewDatabase.Designer.cs" />
+    <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.9.1" />
