@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.DTO;
@@ -35,6 +36,7 @@ namespace WebStore.Controllers
         }
 
         // GET: Product/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Categories = productService.GetCategories();
@@ -44,6 +46,7 @@ namespace WebStore.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(ProductDTO productDto)
         {
             try
