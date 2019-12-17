@@ -13,8 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Migrations\20191217153634_ChangeContext.cs" />
-    <Compile Include="Migrations\20191217153634_ChangeContext.Designer.cs" />
+    <Compile Include="Migrations\20191217171511_NewDatabase.cs" />
+    <Compile Include="Migrations\20191217171511_NewDatabase.Designer.cs" />
+    <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
 

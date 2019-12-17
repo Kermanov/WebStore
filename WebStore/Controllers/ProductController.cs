@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.DTO;
 using WebStore.Models;
@@ -15,11 +17,13 @@ namespace WebStore.Controllers
     {
         private readonly ProductService productService;
         private readonly ImageService imageService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProductController(ProductService productService, ImageService imageService)
+        public ProductController(ProductService productService, ImageService imageService, UserManager<IdentityUser> userManager)
         {
             this.productService = productService;
             this.imageService = imageService;
+            _userManager = userManager;
         }
 
         // GET: Product
@@ -32,6 +36,9 @@ namespace WebStore.Controllers
         public ActionResult Details(int id)
         {
             var product = productService.GetById(id);
+            var comments = productService.GetComments(id);
+            ViewBag.Comments = comments;
+
             return View(product);
         }
 
@@ -115,6 +122,23 @@ namespace WebStore.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult CreateComment(CommentDTO commentDTO)
+        {
+            var newComment = new Comment
+            {
+                UserId = _userManager.GetUserId(User),
+                ProductId = commentDTO.ProductId,
+                CommentText = commentDTO.CommentText
+            };
+
+            productService.AddComment(newComment);
+
+            return RedirectToAction("Details", new { id = commentDTO.ProductId });
         }
     }
 }

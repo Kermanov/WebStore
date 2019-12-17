@@ -97,5 +97,16 @@ namespace WebStore.Services
 
             return productPage;
         }
+
+        public IEnumerable<Comment> GetComments(int productId)
+        {
+            return unitOfWork.Comments.Find(comment => comment.ProductId == productId);
+        }
+
+        public void AddComment(Comment comment)
+        {
+            unitOfWork.Comments.Create(comment);
+            unitOfWork.Save();
+        }
     }
 }
