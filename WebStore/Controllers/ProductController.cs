@@ -183,31 +183,40 @@ namespace WebStore.Controllers
             {
                 rrr.Add(result.FirstOrDefault(x => x.Product.Id == item));
             }
-            return View(rrr);
+            return View(rrr.OrderBy(x=>x.ProductPrice));
         }
         [Authorize]
-        public ActionResult DeleteCart(string id)
+        public ActionResult RemoveOne(string id)
         {
             var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var cart = unitOfWork.ShoppingCartItems.FirstOrDefault(x => x.CartId == id);
             unitOfWork.ShoppingCartItems.Remove(cart);
             unitOfWork.Save();
+            return RedirectToAction("BasketItems");
+        }
 
-            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id);
-            var model = cartItems.GroupBy(t => t.ProductId);
-            List<CartItem> result = cartItems
-                .GroupBy(l => l.ProductId)
-                .SelectMany(cl => cl.Select(
-                    csLine => new CartItem
-                    {
-                        CartId = csLine.CartId,
-                        UserId = csLine.UserId,
-                        Quantity = cl.Count(),
-                        Product = csLine.Product,
-                        ProductPrice = cl.Sum(c => c.ProductPrice)
-                    })).ToList<CartItem>();
-            var rr = result.GroupBy(x => x.CartId).FirstOrDefault();
-            return View(rr);
+        [Authorize]
+        public ActionResult AddOne(string id)
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = unitOfWork.ShoppingCartItems.FirstOrDefault(x => x.CartId == id);
+            unitOfWork.ShoppingCartItems.Add(new CartItem { CartId = Guid.NewGuid().ToString(), Product = cart.Product, ProductId = cart.Product.Id, ProductPrice = cart.ProductPrice, Quantity = 1, UserId = user_id});
+            unitOfWork.Save();
+            return RedirectToAction("BasketItems");
+        }
+
+        [Authorize]
+        public ActionResult DeleteCart(int id)
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var carts = unitOfWork.ShoppingCartItems.Where(x => x.Product.Id == id);
+            foreach (var cart in carts)
+            {
+                unitOfWork.ShoppingCartItems.Remove(cart);
+                
+            }
+            unitOfWork.Save();
+            return RedirectToAction("BasketItems");
         }
     }
 }
