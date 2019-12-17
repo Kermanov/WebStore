@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebStore.Data;
 using WebStore.DTO;
 using WebStore.Models;
 using WebStore.Services;
+using WebStore.UnitOfWork;
 
 namespace WebStore.Controllers
 {
@@ -19,12 +21,14 @@ namespace WebStore.Controllers
         private readonly ProductService productService;
         private readonly ImageService imageService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly WebStoreUnitOfWork unitOfWork;
 
-        public ProductController(ProductService productService, ImageService imageService, UserManager<IdentityUser> userManager)
+        public ProductController(ProductService productService, ImageService imageService, UserManager<IdentityUser> userManager, WebStoreUnitOfWork unitOfWork)
         {
             this.productService = productService;
             this.imageService = imageService;
             _userManager = userManager;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Product
@@ -144,6 +148,66 @@ namespace WebStore.Controllers
             productService.AddComment(newComment);
 
             return RedirectToAction("Details", new { id = commentDTO.ProductId });
+        }
+
+        [Authorize]
+        public ActionResult AddToBasket(int product_id)
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            unitOfWork.ShoppingCartItems.Add(new CartItem { CartId = Guid.NewGuid().ToString() ,ProductId = product_id, UserId = user_id, Quantity = 1,Product = productService.GetById(product_id),ProductPrice = productService.GetById(product_id).Price });
+            unitOfWork.Save();
+
+            return RedirectToAction("Index","Catalog");
+        }
+        [Authorize]
+        public ActionResult BasketItems()
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id);
+            var model = cartItems.GroupBy(t => t.ProductId);
+            List<CartItem> result = cartItems
+                .GroupBy(l => l.Product.Id)
+                .SelectMany(cl => cl.Select(
+                    csLine => new CartItem
+                    {
+                        CartId = csLine.CartId,
+                        UserId = csLine.UserId,
+                        Quantity = cl.Count(),
+                        Product = csLine.Product,
+                        ProductPrice = cl.Sum(c => c.ProductPrice)
+                    })).ToList<CartItem>();
+            var res = result.Select(x => x.Product.Id).Distinct();
+            List<CartItem> rrr = new List<CartItem>();
+            foreach (var item in res)
+            {
+                rrr.Add(result.FirstOrDefault(x => x.Product.Id == item));
+            }
+            return View(rrr);
+        }
+        [Authorize]
+        public ActionResult DeleteCart(string id)
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = unitOfWork.ShoppingCartItems.FirstOrDefault(x => x.CartId == id);
+            unitOfWork.ShoppingCartItems.Remove(cart);
+            unitOfWork.Save();
+
+            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id);
+            var model = cartItems.GroupBy(t => t.ProductId);
+            List<CartItem> result = cartItems
+                .GroupBy(l => l.ProductId)
+                .SelectMany(cl => cl.Select(
+                    csLine => new CartItem
+                    {
+                        CartId = csLine.CartId,
+                        UserId = csLine.UserId,
+                        Quantity = cl.Count(),
+                        Product = csLine.Product,
+                        ProductPrice = cl.Sum(c => c.ProductPrice)
+                    })).ToList<CartItem>();
+            var rr = result.GroupBy(x => x.CartId).FirstOrDefault();
+            return View(rr);
         }
     }
 }

@@ -23,12 +23,15 @@ namespace WebStore.UnitOfWork
             Products = new Repository<Product>(context);
             Comments = new Repository<Comment>(context);
             Users = context.Users;
+            ShoppingCartItems = context.ShoppingCartItems;
         }
 
         public Repository<Category> Categories { get; }
         public Repository<Product> Products { get; }
         public Repository<Comment> Comments { get; }
         public DbSet<IdentityUser> Users { get; }
+        public DbSet<CartItem> ShoppingCartItems { get; set; }
+
 
         public void Save()
         {
