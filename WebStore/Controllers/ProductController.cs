@@ -13,6 +13,7 @@ using WebStore.Services;
 
 namespace WebStore.Controllers
 {
+    
     public class ProductController : Controller
     {
         private readonly ProductService productService;
@@ -43,7 +44,7 @@ namespace WebStore.Controllers
         }
 
         // GET: Product/Create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.Categories = productService.GetCategories();
@@ -53,7 +54,7 @@ namespace WebStore.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(ProductDTO productDto)
         {
             try
@@ -73,34 +74,57 @@ namespace WebStore.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Catalog");
             }
         }
 
         // GET: Product/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
+            ViewBag.Product = productService.GetById(id);
+            ViewBag.Categories = productService.GetCategories();
+
             return View();
         }
 
         // POST: Product/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, ProductDTO productDTO)
         {
             try
             {
-                // TODO: Add update logic here
+                var imageSource = productService.GetById(id).ImageSource;
+                if (productDTO.Image != null)
+                {
+                    imageSource = imageService.SaveImage(productDTO.Image);
+                }
 
-                return RedirectToAction(nameof(Index));
+                var productToUpdate = new Product
+                {
+                    Id = id,
+                    Name = productDTO.Name,
+                    Description = productDTO.Description,
+                    ImageSource = imageSource,
+                    Price = productDTO.Price,
+                    DisplayComments = productDTO.DisplayComments,
+                    CategoryId = productDTO.CategoryId
+                };
+
+                productService.Update(productToUpdate);
+
+                return RedirectToAction("Details", new { id });
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Catalog");
             }
         }
 
         // GET: Product/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             productService.Delete(id);
@@ -108,6 +132,7 @@ namespace WebStore.Controllers
         }
 
         // POST: Product/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

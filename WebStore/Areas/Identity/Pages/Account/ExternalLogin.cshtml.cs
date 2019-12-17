@@ -99,10 +99,38 @@ namespace WebStore.Areas.Identity.Pages.Account
                 LoginProvider = info.LoginProvider;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input = new InputModel
+                    var us = await _userManager.FindByNameAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+                    if (us != null)
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                        await _signInManager.SignInAsync(us, isPersistent: false);
+                        _logger.LogInformation("User logged in.");
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        Input = new InputModel
+                        {
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        };
+                        var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                        var result1 = await _userManager.CreateAsync(user);
+                        if (!result1.Succeeded)
+                        {
+                            _logger.LogInformation("User logined an account using {Name} provider.", info.LoginProvider);
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                        if (result1.Succeeded)
+                        {
+                            result1 = await _userManager.AddLoginAsync(user, info);
+                            if (result1.Succeeded)
+                            {
+                                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                                return LocalRedirect(returnUrl);
+                            }
+                        }
+                    }
                 }
                 return Page();
             }
