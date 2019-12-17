@@ -19,6 +19,8 @@
     <Compile Include="Migrations\20191217200932_AddedBasket.Designer.cs" />
     <Compile Include="Migrations\20191217213046_AddedBasketPrice.cs" />
     <Compile Include="Migrations\20191217213046_AddedBasketPrice.Designer.cs" />
+    <Compile Include="Migrations\20191217230828_AddedBasketBuyed.cs" />
+    <Compile Include="Migrations\20191217230828_AddedBasketBuyed.Designer.cs" />
     <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 

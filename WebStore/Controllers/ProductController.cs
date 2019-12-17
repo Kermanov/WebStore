@@ -164,7 +164,7 @@ namespace WebStore.Controllers
         public ActionResult BasketItems()
         {
             var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id);
+            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id && a.Buyed == false);
             var model = cartItems.GroupBy(t => t.ProductId);
             List<CartItem> result = cartItems
                 .GroupBy(l => l.Product.Id)
@@ -218,6 +218,52 @@ namespace WebStore.Controllers
             }
             unitOfWork.Save();
             return RedirectToAction("BasketItems");
+        }
+
+        [Authorize]
+        public ActionResult SubmitCart()
+        {
+            
+            return RedirectToAction("BasketItems");
+        }
+        [Authorize]
+        public ActionResult SubmitDelivery()
+        {
+            return View("SubmitDelivery");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SubmitDelivery(string Country, string City, string Pochta)
+        {
+            if(string.IsNullOrEmpty(Country))
+            {
+                ModelState.AddModelError("Country", "Please enter a country");
+            }
+            if (string.IsNullOrEmpty(City))
+            {
+                ModelState.AddModelError("City", "Please enter a City");
+            }
+            if (string.IsNullOrEmpty(Pochta))
+            {
+                ModelState.AddModelError("Pochta", "Please enter a Pochta");
+            }
+            if (ModelState.IsValid)
+            {
+                var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id && a.Buyed == false);
+                foreach (var item in cartItems)
+                {
+                    item.Buyed = true;
+                }
+                unitOfWork.Save();
+                return RedirectToAction("Index", "Catalog");
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

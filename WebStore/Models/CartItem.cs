@@ -23,5 +23,7 @@ namespace WebStore.Models
         [Column(TypeName = "decimal(18,4)")]
         public decimal ProductPrice { get; set; }
 
+        public bool Buyed { get; set; }
+
     }
 }
