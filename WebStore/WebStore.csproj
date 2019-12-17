@@ -15,6 +15,8 @@
   <ItemGroup>
     <Compile Include="Migrations\20191217171511_NewDatabase.cs" />
     <Compile Include="Migrations\20191217171511_NewDatabase.Designer.cs" />
+    <Compile Include="Migrations\20191217200932_AddedBasket.cs" />
+    <Compile Include="Migrations\20191217200932_AddedBasket.Designer.cs" />
     <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
