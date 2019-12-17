@@ -13,7 +13,7 @@ using WebStore.Services;
 
 namespace WebStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    
     public class ProductController : Controller
     {
         private readonly ProductService productService;
@@ -44,7 +44,7 @@ namespace WebStore.Controllers
         }
 
         // GET: Product/Create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.Categories = productService.GetCategories();
@@ -54,7 +54,7 @@ namespace WebStore.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(ProductDTO productDto)
         {
             try
@@ -79,12 +79,14 @@ namespace WebStore.Controllers
         }
 
         // GET: Product/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: Product/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -102,6 +104,7 @@ namespace WebStore.Controllers
         }
 
         // GET: Product/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             productService.Delete(id);
@@ -109,6 +112,7 @@ namespace WebStore.Controllers
         }
 
         // POST: Product/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
