@@ -103,6 +103,24 @@ namespace WebStore.Areas.Identity.Pages.Account
                     {
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
+                    var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                    var result1 = await _userManager.CreateAsync(user);
+                    if(!result1.Succeeded)
+                    {
+                        _logger.LogInformation("User logined an account using {Name} provider.", info.LoginProvider);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    if (result1.Succeeded)
+                    {
+                        result1 = await _userManager.AddLoginAsync(user, info);
+                        if (result1.Succeeded)
+                        {
+                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
                 }
                 return Page();
             }
