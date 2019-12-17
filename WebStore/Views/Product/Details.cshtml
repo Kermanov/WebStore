@@ -69,4 +69,8 @@
             </div>
         </div>
     </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a class="btn btn-primary mt-2" href="@Url.Action("Edit", "Product", new { id = Model.Id})" role="button">Edit</a>
+    }
 </div>

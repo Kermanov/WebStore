@@ -74,7 +74,7 @@ namespace WebStore.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Catalog");
             }
         }
 
@@ -82,6 +82,9 @@ namespace WebStore.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
+            ViewBag.Product = productService.GetById(id);
+            ViewBag.Categories = productService.GetCategories();
+
             return View();
         }
 
@@ -89,17 +92,34 @@ namespace WebStore.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, ProductDTO productDTO)
         {
             try
             {
-                // TODO: Add update logic here
+                var imageSource = productService.GetById(id).ImageSource;
+                if (productDTO.Image != null)
+                {
+                    imageSource = imageService.SaveImage(productDTO.Image);
+                }
 
-                return RedirectToAction(nameof(Index));
+                var productToUpdate = new Product
+                {
+                    Id = id,
+                    Name = productDTO.Name,
+                    Description = productDTO.Description,
+                    ImageSource = imageSource,
+                    Price = productDTO.Price,
+                    DisplayComments = productDTO.DisplayComments,
+                    CategoryId = productDTO.CategoryId
+                };
+
+                productService.Update(productToUpdate);
+
+                return RedirectToAction("Details", new { id });
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Catalog");
             }
         }
 
