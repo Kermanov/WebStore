@@ -128,7 +128,7 @@ namespace WebStore.Controllers
         public ActionResult Delete(int id)
         {
             productService.Delete(id);
-            return Ok();
+            return RedirectToAction("Index", "Catalog");
         }
 
         // POST: Product/Delete/5
