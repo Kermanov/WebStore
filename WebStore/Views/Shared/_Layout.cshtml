@@ -25,15 +25,13 @@
                 </div>
                 @if (User.Identity.IsAuthenticated)
                 {
-
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Create">Add product</a>
-                            </li>
-
                             @if (User.IsInRole("Admin"))
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Create">Add product</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Administration</a>
                                 </li>

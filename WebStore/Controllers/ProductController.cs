@@ -13,6 +13,7 @@ using WebStore.Services;
 
 namespace WebStore.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly ProductService productService;
