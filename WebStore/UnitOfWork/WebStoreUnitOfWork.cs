@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebStore.Context;
+using WebStore.Data;
 using WebStore.Models;
 using WebStore.Repositories;
 
@@ -10,10 +10,10 @@ namespace WebStore.UnitOfWork
 {
     public class WebStoreUnitOfWork: IDisposable
     {
-        private readonly WebStoreContext context;
+        private readonly ApplicationDbContext context;
         private bool disposed = false;
 
-        public WebStoreUnitOfWork(WebStoreContext context)
+        public WebStoreUnitOfWork(ApplicationDbContext context)
         {
             this.context = context;
 

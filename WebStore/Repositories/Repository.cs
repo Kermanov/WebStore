@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebStore.Context;
+using WebStore.Data;
 using WebStore.Interfaces;
 using WebStore.Models;
 
@@ -10,9 +10,9 @@ namespace WebStore.Repositories
 {
     public class Repository<T> : IRepository<T> where T: BaseModel
     {
-        private readonly WebStoreContext context;
+        private readonly ApplicationDbContext context;
 
-        public Repository(WebStoreContext context)
+        public Repository(ApplicationDbContext context)
         {
             this.context = context;
         }

@@ -14,7 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.UnitOfWork;
 using WebStore.Configs;
-using WebStore.Context;
 using WebStore.Services;
 
 namespace WebStore
@@ -54,8 +53,6 @@ namespace WebStore
             services.AddControllersWithViews();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<WebStoreContext>(options =>
-                options.UseSqlServer(connection));
 
             services.Configure<CloudinaryConfig>(Configuration.GetSection("CloudinaryConfig"));
 
@@ -112,7 +109,7 @@ namespace WebStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Catalog}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 
