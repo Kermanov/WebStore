@@ -1,7 +1,7 @@
-#WebStore
+# WebStore
 In this project you can look over products with comments, get description, add to basket and make an order.
 
-##Description
+## Description
 To start use website with all opportunities, user have to click on login link in top of navbar or register
 if user doesn't have an account. He can do this in two ways: using general registration with email and password or 
 using social networks(google or facebook)
@@ -21,10 +21,10 @@ of user.
 **'Logout'** button, which helps the user to logout.
 **'User'** page, where authorized user can manage self account information.
 
-##Getting Started
+## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development.
 
-##Prerequisites
+## Prerequisites
 Visual Studio
 SQL Management Studio
 ***Installing***
