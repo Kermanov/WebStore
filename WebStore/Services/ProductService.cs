@@ -79,6 +79,17 @@ namespace WebStore.Services
             {
                 products = products.OrderByDescending(product => product.Price).Reverse();
             }
+            else if (filterParams.SortParameter == SortParameter.Rating)
+            {
+                var ratedProducts = new SortedDictionary<double, Product>();
+                var ratings = GetRatings(products).ToList();
+                for (int i = 0; i < ratings.Count; ++i)
+                {
+                    ratedProducts.Add(ratings[i], products.ElementAt(i));
+                }
+
+                products = ratedProducts.Values.Reverse();
+            }
 
             return products;
         }
@@ -150,6 +161,17 @@ namespace WebStore.Services
             {
                 return 0;
             }
+        }
+
+        public IEnumerable<double> GetRatings(IEnumerable<Product> products)
+        {
+            var ratings = new List<double>();
+            foreach (var product in products)
+            {
+                ratings.Add(GetRating(product.Id));
+            }
+
+            return ratings;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model List<Product>
 @{
     ViewData["Title"] = "Index";
 }
@@ -29,6 +29,7 @@
                 <select name="sortParameter" class="form-control">
                     <option value="0">Cheap first</option>
                     <option value="1">Expensive first</option>
+                    <option value="2">Rating</option>
                 </select>
             </div>
             <div class="col-auto">
@@ -38,14 +39,15 @@
     </div>
     <div class="container">
         <div class="row">
-            @foreach (var product in Model)
+            @for (int i = 0; i < Model.Count; ++i)
             {
                 <div class="card col-3 m-2 p-0">
-                    <img src="@product.ImageSource" class="card-img-top" alt="...">
+                    <h6 class="card-header">@Math.Round((ViewBag.Ratings as List<double>)[i], 2)</h6>
+                    <img src="@Model[i].ImageSource" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <a href="@Url.Action("Details", "Product", new { id = product.Id })"><h5 class="card-title">@product.Name</h5></a>
-                        <h5 class="float-left">$@Math.Round(product.Price, 2)</h5>
-                        <a href="@Url.Action("AddToBasket", "Product", new { product_id = product.Id })"><h5 class="float-right">Add to cart</h5></a>
+                        <a href="@Url.Action("Details", "Product", new { id = Model[i].Id })"><h5 class="card-title">@Model[i].Name</h5></a>
+                        <h5 class="float-left">$@Math.Round(Model[i].Price, 2)</h5>
+                        <a href="@Url.Action("AddToBasket", "Product", new { product_id = Model[i].Id })"><h5 class="float-right">Add to cart</h5></a>
                     </div>
                 </div>
             }

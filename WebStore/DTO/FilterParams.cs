@@ -8,7 +8,8 @@ namespace WebStore.DTO
     public enum SortParameter
     {
         CheapFirst,
-        ExpensiveFirst
+        ExpensiveFirst,
+        Rating
     }
 
     public class FilterParams
