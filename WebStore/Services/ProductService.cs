@@ -108,5 +108,11 @@ namespace WebStore.Services
             unitOfWork.Comments.Create(comment);
             unitOfWork.Save();
         }
+
+        public void Update(Product product)
+        {
+            unitOfWork.Products.Update(product);
+            unitOfWork.Save();
+        }
     }
 }
