@@ -19,6 +19,8 @@ namespace WebStore.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
 
+        public DbSet<Delivery> Deliveries { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();

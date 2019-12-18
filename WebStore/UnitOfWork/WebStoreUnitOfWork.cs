@@ -24,6 +24,7 @@ namespace WebStore.UnitOfWork
             Comments = new Repository<Comment>(context);
             Users = context.Users;
             ShoppingCartItems = context.ShoppingCartItems;
+            Deliveries = context.Deliveries;
         }
 
         public Repository<Category> Categories { get; }
@@ -31,7 +32,7 @@ namespace WebStore.UnitOfWork
         public Repository<Comment> Comments { get; }
         public DbSet<IdentityUser> Users { get; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
-
+        public DbSet<Delivery> Deliveries { get; set; }
 
         public void Save()
         {

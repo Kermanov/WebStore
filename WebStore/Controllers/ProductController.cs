@@ -250,20 +250,93 @@ namespace WebStore.Controllers
             }
             if (ModelState.IsValid)
             {
-                var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id && a.Buyed == false);
-                foreach (var item in cartItems)
-                {
-                    item.Buyed = true;
-                }
-                unitOfWork.Save();
-                return RedirectToAction("Index", "Catalog");
+                return RedirectToAction("AreYouSure",new { Country = Country, City = City, Pochta = Pochta});
             }
             else
             {
                 return View();
             }
         }
+        [Authorize]
+        public ActionResult AreYouSure(IEnumerable<CartItem> cartItems, string Country, string City, string Pochta)
+        {
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id && a.Buyed == false);
+            var model = cartItems.GroupBy(t => t.ProductId);
+            List<CartItem> result = cartItems
+                .GroupBy(l => l.Product.Id)
+                .SelectMany(cl => cl.Select(
+                    csLine => new CartItem
+                    {
+                        CartId = csLine.CartId,
+                        UserId = csLine.UserId,
+                        Quantity = cl.Count(),
+                        Product = csLine.Product,
+                        ProductPrice = cl.Sum(c => c.ProductPrice)
+                    })).ToList<CartItem>();
+            var res = result.Select(x => x.Product.Id).Distinct();
+            List<CartItem> rrr = new List<CartItem>();
+            foreach (var item in res)
+            {
+                rrr.Add(result.FirstOrDefault(x => x.Product.Id == item));
+            }
+            ViewBag.TotalSum = rrr.Sum(x => x.ProductPrice);
+            Delivery d = new Delivery { DeliveryId = Guid.NewGuid().ToString(), Country = Country, City = City, Pochta = Pochta, Quantity = result.Count(), Product = new Product(), ProductId = 0, UserId = user_id };
+            var t = new Tuple<IEnumerable<CartItem>, Delivery>(rrr, d);
+            TempData["Country"] = Country;
+            TempData["City"] = City;
+            TempData["Pochta"] = Pochta;
+            return View(t);
+        }
+        [Authorize]
+        [HttpPost]
+        public ActionResult AreYouSure()
+        {
+            string Country = TempData["Country"].ToString();
+            string City = TempData["City"].ToString();
+            string Pochta = TempData["Pochta"].ToString();
+            var user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            IEnumerable<CartItem> cartItems = unitOfWork.ShoppingCartItems.Select(x => x).Where(a => a.UserId == user_id && a.Buyed == false);
+            foreach (var item in cartItems)
+            {
+                item.Buyed = true;
+            }
+            var model = cartItems.GroupBy(t => t.ProductId);
+            List<CartItem> result = cartItems
+                .GroupBy(l => l.Product.Id)
+                .SelectMany(cl => cl.Select(
+                    csLine => new CartItem
+                    {
+                        CartId = csLine.CartId,
+                        UserId = csLine.UserId,
+                        Quantity = cl.Count(),
+                        Product = csLine.Product,
+                        ProductPrice = cl.Sum(c => c.ProductPrice)
+                    })).ToList<CartItem>();
+            var res = result.Select(x => x.Product.Id).Distinct();
+            List<CartItem> rrr = new List<CartItem>();
+            foreach (var item in res)
+            {
+                rrr.Add(result.FirstOrDefault(x => x.Product.Id == item));
+            }
+            foreach (var item in rrr)
+            {
+                Delivery delivery = new Delivery
+                {
+                    DeliveryId = Guid.NewGuid().ToString(),
+                    UserId = user_id,
+                    Quantity = item.Quantity,
+                    Country = Country,
+                    ProductId = item.Product.Id,
+                    City = City,
+                    Pochta = Pochta
+                };
+                unitOfWork.Deliveries.Add(delivery);
+            }
+            unitOfWork.Save();
+            return RedirectToAction("Index", "Catalog");
+        }
+
     }
 }

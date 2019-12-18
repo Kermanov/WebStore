@@ -1,0 +1,90 @@
+﻿@model Tuple<IEnumerable<WebStore.Models.CartItem>,Delivery>
+@{
+    ViewData["Title"] = "AreYouSure";
+}
+
+<h1>Are You Sure?</h1>
+
+<form asp-action="AreYouSure" enctype="multipart/form-data" method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name of Item
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Price for one
+                </th>
+                <th>
+                    Sum Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1.ToList())
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Price)
+                    </td>
+                    <td>
+                        @item.ProductPrice
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total sum: @ViewBag.TotalSum</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Country
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    Pochta
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(x => x.Item2.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => x.Item2.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => x.Item2.Pochta)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group">
+        <input type="submit" value="Yes" class="btn btn-primary" />
+        <input type="reset" asp-action="BasketItems" value="No" class="btn btn-primary" />
+    </div>
+    <button onclick="location.href='@Url.Action("BasketItems", "Product")';return false;">Cancel</button>
+
+</form>
