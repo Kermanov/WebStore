@@ -83,8 +83,7 @@
     </table>
     <div class="form-group">
         <input type="submit" value="Yes" class="btn btn-primary" />
-        <input type="reset" asp-action="BasketItems" value="No" class="btn btn-primary" />
     </div>
-    <button onclick="location.href='@Url.Action("BasketItems", "Product")';return false;">Cancel</button>
+    <button class="btn btn-primary" onclick="location.href='@Url.Action("BasketItems", "Product")';return false;">Cancel</button>
 
 </form>

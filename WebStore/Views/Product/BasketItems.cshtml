@@ -5,14 +5,12 @@
 
 }
 
-<h1>Items in basket</h1>
-
 
 @if (Model != null)
 {
     @if (Model.Count() >= 1)
     {
-
+        <h1>Items in basket</h1>
         <form asp-action="SubmitDelivery" enctype="multipart/form-data" method="get">
             <table class="table">
                 <thead>
@@ -70,6 +68,10 @@
             </div>
         </form>
 
+    }
+    else
+    {
+        <h4>Your basket is empty. Go back to catalog</h4>
     }
 }
 else
