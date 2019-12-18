@@ -45,7 +45,7 @@
                     <div class="card-body">
                         <a href="@Url.Action("Details", "Product", new { id = product.Id })"><h5 class="card-title">@product.Name</h5></a>
                         <h5 class="float-left">$@Math.Round(product.Price, 2)</h5>
-                        <a href="#"><h5 class="float-right">Add to cart</h5></a>
+                        <a href="@Url.Action("AddToBasket", "Product", new { product_id = product.Id })"><h5 class="float-right">Add to cart</h5></a>
                     </div>
                 </div>
             }

@@ -1,0 +1,80 @@
+﻿@model IEnumerable<WebStore.Models.CartItem>
+
+@{
+    ViewData["Title"] = "BasketItems";
+
+}
+
+
+@if (Model != null)
+{
+    @if (Model.Count() >= 1)
+    {
+        <h1>Items in basket</h1>
+        <form asp-action="SubmitDelivery" enctype="multipart/form-data" method="get">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name of Item
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Quantity)
+                        </th>
+                        <th>
+                            Price for one
+                        </th>
+                        <th>
+                            Sum Price
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Price)
+                            </td>
+                            <td>
+                                @item.ProductPrice
+                            </td>
+                            <td>
+                                @Html.ActionLink("Add one", "AddOne", new { id = item.CartId }) |
+                                @Html.ActionLink("Remove one", "RemoveOne", new { id = item.CartId }) |
+                                @Html.ActionLink("Delete", "DeleteCart", new { id = item.Product.Id })
+                            </td>
+                        </tr>
+
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total sum: @ViewBag.TotalSum</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group">
+                <input type="submit" value="NEXT" class="btn btn-primary" />
+            </div>
+        </form>
+
+    }
+    else
+    {
+        <h4>Your basket is empty. Go back to catalog</h4>
+    }
+}
+else
+{
+    <h4>Your basket is empty. Go back to catalog</h4>
+}

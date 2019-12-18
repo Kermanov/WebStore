@@ -25,6 +25,8 @@ namespace WebStore.UnitOfWork
             Users = context.Users;
             UserRoles = context.UserRoles;
             Roles = context.Roles;
+            ShoppingCartItems = context.ShoppingCartItems;
+            Deliveries = context.Deliveries;
         }
 
         public Repository<Category> Categories { get; }
@@ -33,6 +35,8 @@ namespace WebStore.UnitOfWork
         public DbSet<IdentityUser> Users { get; }
         public DbSet<IdentityUserRole<string>> UserRoles { get; }
         public DbSet<IdentityRole> Roles { get; }
+        public DbSet<CartItem> ShoppingCartItems { get; set; }
+        public DbSet<Delivery> Deliveries { get; set; }
 
         public void Save()
         {
