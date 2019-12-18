@@ -52,6 +52,13 @@
                                             <h6 class="mt-0">@comment.User.UserName</h6>
                                             @comment.CommentText
                                         </div>
+
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                        {
+                                            <a class="btn btn-danger mt-2" href="@Url.Action("DeleteComment", "Product", new { commentId = comment.Id, productId = Model.Id })" role="button">
+                                                Delete
+                                            </a>
+                                        }
                                     </div>
                                     <hr />
                                 }

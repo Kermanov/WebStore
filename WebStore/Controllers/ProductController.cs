@@ -340,5 +340,12 @@ namespace WebStore.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteComment(int commentId, int productId)
+        {
+            productService.DeleteComment(commentId);
+
+            return RedirectToAction("Details", "Product", new { id = productId });
+        }
     }
 }

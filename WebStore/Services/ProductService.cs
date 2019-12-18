@@ -109,6 +109,12 @@ namespace WebStore.Services
             unitOfWork.Save();
         }
 
+        public void DeleteComment(int id)
+        {
+            unitOfWork.Comments.DeleteById(id);
+            unitOfWork.Save();
+        }
+
         public void Update(Product product)
         {
             unitOfWork.Products.Update(product);
