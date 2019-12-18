@@ -43,6 +43,7 @@ namespace WebStore.Controllers
             var product = productService.GetById(id);
             var comments = productService.GetComments(id);
             ViewBag.Comments = comments;
+            ViewBag.Rating = productService.GetRating(id);
 
             return View(product);
         }
@@ -132,25 +133,7 @@ namespace WebStore.Controllers
         public ActionResult Delete(int id)
         {
             productService.Delete(id);
-            return Ok();
-        }
-
-        // POST: Product/Delete/5
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index", "Catalog");
         }
 
         [HttpPost]
@@ -358,5 +341,27 @@ namespace WebStore.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteComment(int commentId, int productId)
+        {
+            productService.DeleteComment(commentId);
+
+            return RedirectToAction("Details", "Product", new { id = productId });
+        }
+
+        [Authorize]
+        public ActionResult Vote(MarkDTO markDTO)
+        {
+            var vote = new Vote
+            {
+                ProductId = markDTO.ProductId,
+                Mark = markDTO.Mark,
+                UserId = _userManager.GetUserId(User)
+            };
+
+            productService.Vote(vote);
+
+            return RedirectToAction("Details", "Product", new { id = markDTO.ProductId });
+        }
     }
 }

@@ -79,6 +79,17 @@ namespace WebStore.Services
             {
                 products = products.OrderByDescending(product => product.Price).Reverse();
             }
+            else if (filterParams.SortParameter == SortParameter.Rating)
+            {
+                var ratedProducts = new SortedDictionary<double, Product>();
+                var ratings = GetRatings(products).ToList();
+                for (int i = 0; i < ratings.Count; ++i)
+                {
+                    ratedProducts.Add(ratings[i], products.ElementAt(i));
+                }
+
+                products = ratedProducts.Values.Reverse();
+            }
 
             return products;
         }
@@ -109,10 +120,58 @@ namespace WebStore.Services
             unitOfWork.Save();
         }
 
+        public void DeleteComment(int id)
+        {
+            unitOfWork.Comments.DeleteById(id);
+            unitOfWork.Save();
+        }
+
         public void Update(Product product)
         {
             unitOfWork.Products.Update(product);
             unitOfWork.Save();
+        }
+
+        public void Vote(Vote newVote)
+        {
+            var oldVote = unitOfWork.Votes.Find(vote => vote.UserId == newVote.UserId && vote.ProductId == newVote.ProductId).FirstOrDefault();
+            if (oldVote != null)
+            {
+                oldVote.Mark = newVote.Mark;
+                unitOfWork.Votes.Update(oldVote);
+            }
+            else
+            {
+                unitOfWork.Votes.Create(newVote);
+            }
+
+            unitOfWork.Save();
+        }
+
+        public double GetRating(int id)
+        {
+            var total = unitOfWork.Votes.Find(vote => vote.ProductId == id).Sum(vote => vote.Mark);
+            var votesNumber = unitOfWork.Votes.Find(vote => vote.ProductId == id).Count();
+
+            if (votesNumber > 0)
+            {
+                return total / (double)votesNumber;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public IEnumerable<double> GetRatings(IEnumerable<Product> products)
+        {
+            var ratings = new List<double>();
+            foreach (var product in products)
+            {
+                ratings.Add(GetRating(product.Id));
+            }
+
+            return ratings;
         }
     }
 }

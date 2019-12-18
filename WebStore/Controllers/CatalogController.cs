@@ -39,7 +39,9 @@ namespace WebStore.Controllers
             products = productService.GetPaginated(products, pageNumber ?? 1, 10, out pagesCount);
             ViewBag.PagesCount = pagesCount;
 
-            return View(products);
+            ViewBag.Ratings = productService.GetRatings(products).ToList();
+
+            return View(products.ToList());
         }
     }
 }

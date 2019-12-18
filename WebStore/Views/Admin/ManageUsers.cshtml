@@ -1,0 +1,45 @@
+﻿@model Dictionary<Microsoft.AspNetCore.Identity.IdentityUser, string>
+
+@{
+    ViewData["Title"] = "ManageAdmins";
+}
+
+<h1>User manager</h1>
+
+<div class="container">   
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">UserName</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userWithRole in Model)
+            {
+                <tr>
+                    <td>@userWithRole.Key.UserName</td>
+                    <td>@userWithRole.Value</td>
+                    <td>
+                        @if (userWithRole.Value == "Admin")
+                        {
+                            <a class="btn btn-primary" role="button" href="@Url.Action("RemoveRights", "Admin", new { userId = userWithRole.Key.Id })">
+                                Remove admin rights
+                            </a>
+                        }
+                        else if (userWithRole.Value == "User")
+                        {
+                            <a class="btn btn-primary" role="button" href="@Url.Action("GiveRights", "Admin", new { userId = userWithRole.Key.Id })">
+                                Give admin rights
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

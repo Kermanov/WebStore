@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "ManageCategories";
+}
+
+<h1>Categories manager</h1>
+
+<div class="container">
+
+    <form asp-action="AddCategory" method="post" class="form-row">
+        <div class="col-auto">
+            <input type="text" name="categoryName" class="form-control"/>
+        </div>
+        <div class="col-auto">
+            <input type="submit" value="Add category" class="btn btn-primary" />
+        </div>
+    </form>
+
+    <table class="table mt-2">
+        <thead>
+            <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        <a class="btn btn-danger" role="button" href="@Url.Action("DeleteCategory", "Admin", new { id = category.Id })">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
