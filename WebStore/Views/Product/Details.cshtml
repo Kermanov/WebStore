@@ -24,6 +24,46 @@
 
                     <h5 class="card-title">Category:</h5>
                     <span class="card-text">@Model.Category.Name</span>
+
+                    <h5 class="card-title">Rating:</h5>
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">@Math.Round(ViewBag.Rating, 2)</h4>
+                    </div>
+
+                    <form asp-action="Vote" class="form-row" method="post">
+                        <div class="col-11">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="mark" value="1">1
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="mark" value="2">2
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="mark" value="3">3
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="mark" value="4">4
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="mark" value="5">5
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <input type="submit" value="Vote" class="btn btn-primary float-right" />
+                        </div>
+                    </form>
+
                     <hr />
 
                     @if (Model.DisplayComments)

@@ -18,8 +18,8 @@ namespace WebStore.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
-
         public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<Vote> Votes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

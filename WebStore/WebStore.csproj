@@ -25,6 +25,8 @@
     <Compile Include="Migrations\20191217233240_AddedDelivery.Designer.cs" />
     <Compile Include="Migrations\20191217233353_AddedDelivery1.cs" />
     <Compile Include="Migrations\20191217233353_AddedDelivery1.Designer.cs" />
+    <Compile Include="Migrations\20191218032039_AddVotes.cs" />
+    <Compile Include="Migrations\20191218032039_AddVotes.Designer.cs" />
     <Compile Include="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 

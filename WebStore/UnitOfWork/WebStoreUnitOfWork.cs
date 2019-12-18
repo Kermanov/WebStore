@@ -27,6 +27,7 @@ namespace WebStore.UnitOfWork
             Roles = context.Roles;
             ShoppingCartItems = context.ShoppingCartItems;
             Deliveries = context.Deliveries;
+            Votes = new Repository<Vote>(context);
         }
 
         public Repository<Category> Categories { get; }
@@ -37,6 +38,7 @@ namespace WebStore.UnitOfWork
         public DbSet<IdentityRole> Roles { get; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
+        public Repository<Vote> Votes { get; }
 
         public void Save()
         {

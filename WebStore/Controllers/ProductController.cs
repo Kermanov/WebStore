@@ -43,6 +43,7 @@ namespace WebStore.Controllers
             var product = productService.GetById(id);
             var comments = productService.GetComments(id);
             ViewBag.Comments = comments;
+            ViewBag.Rating = productService.GetRating(id);
 
             return View(product);
         }
@@ -346,6 +347,21 @@ namespace WebStore.Controllers
             productService.DeleteComment(commentId);
 
             return RedirectToAction("Details", "Product", new { id = productId });
+        }
+
+        [Authorize]
+        public ActionResult Vote(MarkDTO markDTO)
+        {
+            var vote = new Vote
+            {
+                ProductId = markDTO.ProductId,
+                Mark = markDTO.Mark,
+                UserId = _userManager.GetUserId(User)
+            };
+
+            productService.Vote(vote);
+
+            return RedirectToAction("Details", "Product", new { id = markDTO.ProductId });
         }
     }
 }
