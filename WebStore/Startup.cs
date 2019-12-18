@@ -62,6 +62,8 @@ namespace WebStore
 
             services.AddTransient<UserService>();
 
+            services.AddTransient<CategoryService>();
+
             services.AddTransient<ImageService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
